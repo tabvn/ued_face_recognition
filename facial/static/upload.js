@@ -26,6 +26,9 @@ var Upload = function (_React$Component) {
             result: null,
             loaded: false,
             selectedIndex: -1,
+            users: [],
+            taggedUserId: null,
+            tagLoading: false,
             viewer: {
                 width: 0,
                 height: 0
@@ -45,9 +48,22 @@ var Upload = function (_React$Component) {
     }
 
     _createClass(Upload, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            axios.get('/api/users').then(function (res) {
+                _this2.setState({
+                    users: res.data
+                });
+            }).catch(function (e) {
+                console.log(e);
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var _this3 = this;
 
             var result = this.state.result;
 
@@ -57,7 +73,7 @@ var Upload = function (_React$Component) {
                 { className: 'row' },
                 React.createElement(
                     'div',
-                    { className: 'col-md-8' },
+                    { className: 'col-md-9' },
                     React.createElement(
                         'h1',
                         { className: "page-title" },
@@ -67,11 +83,20 @@ var Upload = function (_React$Component) {
                         'div',
                         null,
                         React.createElement(
-                            'p',
-                            null,
-                            'Found ',
-                            result.faces.length,
-                            ' faces in the picture.'
+                            'div',
+                            { className: 'alert alert-info' },
+                            React.createElement(
+                                'p',
+                                null,
+                                'Found ',
+                                result.faces.length,
+                                ' faces in the picture.',
+                                result.faces.length > 0 && React.createElement(
+                                    'span',
+                                    null,
+                                    'Click to face rectangle to begin tag people.'
+                                )
+                            )
                         ),
                         React.createElement(
                             'div',
@@ -79,14 +104,14 @@ var Upload = function (_React$Component) {
                                     width: this.state.viewer.width,
                                     height: this.state.viewer.height
                                 } : null, className: 'viewer', ref: function ref(_ref2) {
-                                    return _this2.viewerElement = _ref2;
+                                    return _this3.viewerElement = _ref2;
                                 } },
                             React.createElement('img', { onLoad: function onLoad() {
-                                    _this2.setState({
+                                    _this3.setState({
                                         loaded: true,
                                         viewer: {
-                                            width: _this2.viewerElement.clientWidth,
-                                            height: _this2.viewerElement.clientHeight
+                                            width: _this3.viewerElement.clientWidth,
+                                            height: _this3.viewerElement.clientHeight
                                         }
                                     });
                                 }, src: '/files/' + result.name, alt: '' }),
@@ -101,16 +126,16 @@ var Upload = function (_React$Component) {
                                     left: left + 'px',
                                     width: w + 'px',
                                     height: h + 'px',
-                                    border: '3px solid #0257d5',
+                                    border: '2px solid #0056b3',
                                     borderRadius: '3px',
                                     position: 'absolute'
                                 };
 
-                                if (_this2.state.selectedIndex === index) {
-                                    faceStyle.borderColor = 'red';
+                                if (_this3.state.selectedIndex === index) {
+                                    faceStyle.border = '2px solid red';
                                 }
                                 return React.createElement('div', { onClick: function onClick() {
-                                        _this2.setState({
+                                        _this3.setState({
                                             selectedIndex: index
                                         });
                                     }, key: index, style: faceStyle, className: 'face-rect' });
@@ -120,18 +145,18 @@ var Upload = function (_React$Component) {
                         'form',
                         { onSubmit: function onSubmit(e) {
                                 e.preventDefault();
-                                if (!_this2.state.file) {
+                                if (!_this3.state.file) {
                                     alert("Image is required");
                                     return;
                                 }
 
-                                _this2.setState({ loading: true }, function () {
+                                _this3.setState({ loading: true }, function () {
 
                                     var formData = new FormData();
-                                    formData.append('file', _this2.state.file);
+                                    formData.append('file', _this3.state.file);
                                     axios.post('/api/upload', formData).then(function (res) {
                                         console.log(res);
-                                        _this2.setState({
+                                        _this3.setState({
                                             loading: false,
                                             file: null,
                                             result: res.data
@@ -139,7 +164,7 @@ var Upload = function (_React$Component) {
                                     }).catch(function (e) {
                                         console.log(e);
                                         alert("An error uploading image.");
-                                        _this2.setState({
+                                        _this3.setState({
                                             loading: false
                                         });
                                     });
@@ -149,7 +174,7 @@ var Upload = function (_React$Component) {
                             'div',
                             { className: 'form-group' },
                             React.createElement('input', { onChange: function onChange(e) {
-                                    _this2.setState({
+                                    _this3.setState({
                                         file: e.target.files[0]
                                     });
                                 }, type: "file", accept: 'image/*' })
@@ -158,6 +183,81 @@ var Upload = function (_React$Component) {
                             'button',
                             { type: 'submit', className: 'btn btn-primary' },
                             this.state.loading ? 'Uploading...' : 'Upload'
+                        )
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'col-md-3' },
+                    this.state.selectedIndex > -1 && React.createElement(
+                        'div',
+                        null,
+                        React.createElement(
+                            'h2',
+                            { className: 'sidebar-title' },
+                            'Tag this face'
+                        ),
+                        React.createElement(
+                            'form',
+                            { onSubmit: function onSubmit(e) {
+                                    e.preventDefault();
+                                    if (!_this3.state.taggedUserId) {
+                                        alert("Select user to tag");
+                                        return;
+                                    }
+                                    axios.post('/api/tag', {
+                                        id: result._id,
+                                        index: _this3.state.selectedIndex,
+                                        userId: _this3.state.taggedUserId
+                                    }).then(function (res) {
+                                        _this3.setState({
+                                            taggedUserId: ''
+                                        }, function () {
+                                            alert("Face has been tagged successful.");
+                                        });
+                                    }).catch(function (e) {
+                                        console.log("err", e);
+                                    });
+                                } },
+                            React.createElement(
+                                'div',
+                                { className: 'form-group' },
+                                React.createElement(
+                                    'select',
+                                    {
+                                        value: this.state.taggedUserId,
+                                        onChange: function onChange(e) {
+                                            _this3.setState({ taggedUserId: e.target.value });
+                                        } },
+                                    React.createElement(
+                                        'option',
+                                        { value: '' },
+                                        'Select pepple to tag?'
+                                    ),
+                                    this.state.users.map(function (user, index) {
+                                        return React.createElement(
+                                            'option',
+                                            { key: index, value: user._id },
+                                            user.name
+                                        );
+                                    })
+                                )
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'form-group' },
+                                React.createElement(
+                                    'label',
+                                    { htmlFor: 'name' },
+                                    'Face encoding'
+                                ),
+                                React.createElement('textarea', { onChange: function onChange() {}, value: JSON.stringify(result.faces[this.state.selectedIndex]) })
+                            ),
+                            React.createElement(
+                                'button',
+                                { type: 'submit', className: 'btn btn-primary' },
+                                'Save'
+                            )
                         )
                     )
                 )

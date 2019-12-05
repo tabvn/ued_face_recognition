@@ -51,5 +51,8 @@ nav ul li a {
 .viewer {
   position: relative;
 }
+.viewer img {
+  max-width: 100%;
+}
 
 /*# sourceMappingURL=style.css.map */

@@ -5,6 +5,9 @@ class Upload extends React.Component {
         result: null,
         loaded: false,
         selectedIndex: -1,
+        users: [],
+        taggedUserId: null,
+        tagLoading: false,
         viewer: {
             width: 0,
             height: 0,
@@ -25,17 +28,33 @@ class Upload extends React.Component {
 
     }
 
+    componentDidMount() {
+        axios.get(`/api/users`).then(res => {
+            this.setState({
+                users: res.data,
+            })
+        }).catch((e) => {
+            console.log(e)
+        })
+    }
+
     render() {
         const {result} = this.state
         const zoom = this.calculateZoomSize(result)
         return (
             <div className={'row'}>
-                <div className={'col-md-8'}>
+                <div className={'col-md-9'}>
                     <h1 className={"page-title"}>{result ? 'Upload completed' : 'Upload'}</h1>
                     {
                         result ? (
                                 <div>
-                                    <p>Found {result.faces.length} faces in the picture.</p>
+                                    <div className={'alert alert-info'}>
+                                        <p>Found {result.faces.length} faces in the picture.
+                                            {result.faces.length > 0 && (
+                                                <span>Click to face rectangle to begin tag people.</span>
+                                            )}
+                                        </p>
+                                    </div>
                                     <div style={this.state.loaded ? {
                                         width: this.state.viewer.width,
                                         height: this.state.viewer.height
@@ -61,13 +80,13 @@ class Upload extends React.Component {
                                                     left: `${left}px`,
                                                     width: `${w}px`,
                                                     height: `${h}px`,
-                                                    border: '3px solid #0257d5',
+                                                    border: '2px solid #0056b3',
                                                     borderRadius: '3px',
                                                     position: 'absolute'
                                                 };
 
                                                 if (this.state.selectedIndex === index) {
-                                                    faceStyle.borderColor = 'red'
+                                                    faceStyle.border = '2px solid red'
                                                 }
                                                 return (
                                                     <div onClick={() => {
@@ -125,6 +144,56 @@ class Upload extends React.Component {
                                     </button>
                                 </form>
                             )
+                    }
+                </div>
+                <div className={'col-md-3'}>
+                    {
+                        this.state.selectedIndex > -1 && (
+                            <div>
+                                <h2 className={'sidebar-title'}>Tag this face</h2>
+                                <form onSubmit={(e) => {
+                                    e.preventDefault()
+                                    if (!this.state.taggedUserId) {
+                                        alert("Select user to tag")
+                                        return
+                                    }
+                                    axios.post(`/api/tag`, {
+                                        id: result._id,
+                                        index: this.state.selectedIndex,
+                                        userId: this.state.taggedUserId,
+                                    }).then((res) => {
+                                        this.setState({
+                                            taggedUserId: '',
+                                        }, () => {
+                                            alert("Face has been tagged successful.")
+                                        })
+                                    }).catch((e) => {
+                                        console.log("err", e)
+                                    })
+                                }}>
+                                    <div className={'form-group'}>
+                                        <select
+                                            value={this.state.taggedUserId}
+                                            onChange={(e) => {
+                                                this.setState({taggedUserId: e.target.value})
+                                            }}>
+                                            <option value={''}>Select pepple to tag?</option>
+                                            {this.state.users.map((user, index) => (
+                                                <option key={index} value={user._id}>{user.name}</option>
+                                            ))}
+                                        </select>
+
+                                    </div>
+                                    <div className={'form-group'}>
+                                        <label htmlFor="name">Face encoding</label>
+                                        <textarea onChange={() => {
+
+                                        }} value={JSON.stringify(result.faces[this.state.selectedIndex])}/>
+                                    </div>
+                                    <button type={'submit'} className={'btn btn-primary'}>Save</button>
+                                </form>
+                            </div>
+                        )
                     }
                 </div>
 
