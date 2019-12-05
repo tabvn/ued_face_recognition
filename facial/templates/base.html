@@ -1,0 +1,21 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - Face recognition</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<nav>
+    <ul>
+        <li><a href="{{ url_for('users') }}">Users</a>
+        <li><a href="{{ url_for('users') }}">Upload</a>
+        <li><a href="{{ url_for('users') }}">Recognition</a>
+        <li><a href="{{ url_for('users') }}">Train</a>
+    </ul>
+</nav>
+<section class="content">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    {% block content %}{% endblock %}
+    <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    {% block js %}{% endblock %}
+</section>

@@ -1,0 +1,4 @@
+.idea
+.DS_Store
+.env.local
+/facial/static/node_modules
