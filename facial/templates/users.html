@@ -1,15 +1,12 @@
 {% extends 'base.html' %}
-
-{% block header %}
-<h1>{% block title %}Users{% endblock %}</h1>
-{% endblock %}
+{% block title %}Users{% endblock %}
 
 {% block content %}
-<div id="users">
+    <div id="page">
 
-</div>
+    </div>
 {% endblock %}
 
 {% block js %}
- <script src="{{ url_for('static', filename='users.js') }}" crossorigin></script>
+    <script src="{{ url_for('static', filename='users.js') }}" crossorigin></script>
 {% endblock %}

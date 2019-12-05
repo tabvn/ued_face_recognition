@@ -2,10 +2,11 @@ from PIL import Image
 import os
 import dlib
 import numpy as np
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import uuid
 
 predictor_path = "./shape_predictor_5_face_landmarks.dat"
 face_rec_model_path = "./dlib_face_recognition_resnet_model_v1.dat"
@@ -30,8 +31,13 @@ def allowed_file(filename, allow_extensions):
 
 
 @app.route('/')
-def users():
+def page_users():
     return render_template('users.html')
+
+
+@app.route('/upload')
+def page_upload():
+    return render_template('upload.html')
 
 
 @app.route('/api/users', methods=['GET'])
@@ -53,12 +59,19 @@ def api_create_user():
     return jsonify(user)
 
 
+@app.route('/files/<filename>', methods=['GET'])
+def get_file(filename):
+    return send_from_directory(storage,
+                               filename)
+
+
 @app.route('/api/upload', methods=['POST'])
 def upload():
     allow_extensions = {'png', 'jpg', 'jpeg'}
     file = request.files['file']
+
     if file and allowed_file(file.filename, allow_extensions):
-        filename = secure_filename(file.filename)
+        filename = str(uuid.uuid1()) + "_" + secure_filename(file.filename)
         file_path = os.path.join(storage, filename)
         file.save(file_path)
 
@@ -83,7 +96,9 @@ def upload():
         obj = {"name": filename, "width": width, "height": height, "faces": items}
         # save to mongodb
         obj["_id"] = str(db.images.insert_one(obj).inserted_id)
-    return jsonify(obj)
+        return jsonify(obj)
+
+    return jsonify({"error": "image not found"})
 
 
 if __name__ == '__main__':

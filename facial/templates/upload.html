@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+    <div id="page">
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='upload.js') }}" crossorigin></script>
+{% endblock %}
