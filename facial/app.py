@@ -158,7 +158,7 @@ def api_detect():
     # load trained model
     with open("./trained.model", 'rb') as f:
         knn_clf = pickle.load(f)
-    distance_threshold = 0.65
+    distance_threshold = 0.42
 
     if file and allowed_file(file.filename, allow_extensions):
         filename = str(uuid.uuid1()) + "_" + secure_filename(file.filename)

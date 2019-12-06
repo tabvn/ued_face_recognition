@@ -136,11 +136,23 @@ var Recognition = function (_React$Component) {
                                 if (_this3.state.selectedIndex === index) {
                                     faceStyle.border = '2px solid red';
                                 }
-                                return React.createElement('div', { onClick: function onClick() {
-                                        _this3.setState({
-                                            selectedIndex: index
-                                        });
-                                    }, key: index, style: faceStyle, className: 'face-rect' });
+                                return React.createElement(
+                                    'div',
+                                    { onClick: function onClick() {
+                                            _this3.setState({
+                                                selectedIndex: index
+                                            });
+                                        }, key: index, style: faceStyle, className: 'face-rect' },
+                                    React.createElement(
+                                        'span',
+                                        { style: {
+                                                background: 'rgba(0,0,0,0.4)',
+                                                color: '#FFF',
+                                                fontSize: '12px'
+                                            } },
+                                        face.user ? face.user.name : 'Unknown people'
+                                    )
+                                );
                             })
                         )
                     ) : React.createElement(
@@ -193,18 +205,22 @@ var Recognition = function (_React$Component) {
                     { className: 'col-md-3' },
                     this.state.selectedIndex > -1 && React.createElement(
                         'div',
-                        { className: 'card-body' },
+                        { className: 'card' },
                         React.createElement(
                             'div',
-                            {
-                                className: 'card-title' },
-                            selectedFace.user ? selectedFace.user.name : 'Unknown people'
-                        ),
-                        selectedFace.user && React.createElement(
-                            'p',
-                            { className: 'card-text' },
-                            'User ID: ',
-                            selectedFace.user._id
+                            { className: 'card-body' },
+                            React.createElement(
+                                'div',
+                                {
+                                    className: 'card-title' },
+                                selectedFace.user ? selectedFace.user.name : 'Unknown'
+                            ),
+                            selectedFace.user && React.createElement(
+                                'p',
+                                { className: 'card-text' },
+                                'User ID: ',
+                                selectedFace.user._id
+                            )
                         )
                     )
                 )
