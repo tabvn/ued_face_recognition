@@ -28,8 +28,8 @@
     </div>
 
     <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
-    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="{{ url_for('static', filename='react.development.js') }}" crossorigin></script>
+    <script src="{{ url_for('static', filename='react-dom.development.js') }}" crossorigin></script>
     <script src="{{ url_for('static', filename='train.js') }}" crossorigin></script>
     {% block js %}{% endblock %}
 </section>
