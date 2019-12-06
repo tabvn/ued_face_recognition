@@ -97,10 +97,10 @@ class Recognition extends React.Component {
                                                         })
                                                     }} key={index} style={faceStyle} className={'face-rect'}>
                                                         <span style={{
-                                                            background: 'rgba(0,0,0,0.4)',
+                                                            background: 'rgba(0,0,0,0.2)',
                                                             color: '#FFF',
-                                                            fontSize: '12px'
-                                                        }}>{face.user ? face.user.name : 'Unknown people'}</span>
+                                                            fontSize: '11px'
+                                                        }}>{face.user ? face.user.name : 'Unknown'}</span>
                                                     </div>
                                                 )
                                             })
@@ -159,14 +159,14 @@ class Recognition extends React.Component {
                         this.state.selectedIndex > -1 && (
                             <div className={'card'}>
                                 <div className={'card-body'}>
-                                <div
-                                    className={'card-title'}>{selectedFace.user ? selectedFace.user.name : 'Unknown'}</div>
-                                {
-                                    selectedFace.user && (
-                                        <p className={'card-text'}>User ID: {selectedFace.user._id}</p>
-                                    )
-                                }
-                            </div>
+                                    <div
+                                        className={'card-title'}>{selectedFace.user ? selectedFace.user.name : 'Unknown'}</div>
+                                    {
+                                        selectedFace.user && (
+                                            <p className={'card-text'}>User ID: {selectedFace.user._id}</p>
+                                        )
+                                    }
+                                </div>
                             </div>
                         )
                     }

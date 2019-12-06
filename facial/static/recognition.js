@@ -146,11 +146,11 @@ var Recognition = function (_React$Component) {
                                     React.createElement(
                                         'span',
                                         { style: {
-                                                background: 'rgba(0,0,0,0.4)',
+                                                background: 'rgba(0,0,0,0.2)',
                                                 color: '#FFF',
-                                                fontSize: '12px'
+                                                fontSize: '11px'
                                             } },
-                                        face.user ? face.user.name : 'Unknown people'
+                                        face.user ? face.user.name : 'Unknown'
                                     )
                                 );
                             })
