@@ -12,22 +12,34 @@ body {
   box-sizing: border-box;
 }
 
-nav {
+.header {
   background: #20232a;
   height: 50px;
   align-items: center;
   display: flex;
 }
+
 nav ul {
   padding: 0;
   margin: 0;
   display: flex;
   list-style: none;
 }
+nav ul li {
+  margin: 0;
+  padding: 0;
+}
 nav ul li a {
   color: #FFF;
   padding: 10px 20px;
   text-decoration: none;
+  display: block;
+}
+nav ul li a:hover {
+  text-decoration: none;
+}
+nav ul li a.active {
+  color: #0d6efd;
 }
 
 .content {

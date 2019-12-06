@@ -43,6 +43,11 @@ def page_upload():
     return render_template('upload.html')
 
 
+@app.route('/recognition', methods=['GET'])
+def page_recognition():
+    return render_template('recognition.html')
+
+
 @app.route('/api/users', methods=['GET'])
 def api_get_users():
     res = []

@@ -13,23 +13,35 @@ body {
   box-sizing: border-box;
 }
 
-nav {
+.header {
   background: #20232a;
   height: 50px;
   align-items: center;
   display: flex;
+}
+
+nav {
 
   ul {
     padding: 0;
     margin: 0;
     display: flex;
     list-style: none;
-
     li {
+      margin: 0;
+      padding: 0;
+
       a {
         color: #FFF;
         padding: 10px 20px;
         text-decoration: none;
+        display: block;
+        &:hover {
+          text-decoration: none;
+        }
+        &.active {
+         color: #0d6efd;
+        }
       }
     }
   }

@@ -1,14 +1,27 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - Face recognition</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<nav>
-    <ul>
-        <li><a href="{{ url_for('page_users') }}">Users</a>
-        <li><a href="{{ url_for('page_upload') }}">Upload</a>
-        <li><a href="{{ url_for('page_users') }}">Recognition</a>
-        <li><a href="{{ url_for('page_users') }}">Train</a>
-    </ul>
-</nav>
+
+<div class="header">
+    <nav>
+        <ul>
+            <li>
+                <a {%- if request.path == "/" %} class="active"{% endif %} href="{{ url_for('page_users') }}">Users</a>
+            </li>
+            <li>
+                <a {%- if request.path == "/upload" %} class="active"{% endif %} href="{{ url_for('page_upload') }}">Tag
+                    people</a>
+            </li>
+            <li>
+                <a {%- if request.path == "/recognition" %}
+                    class="active"{% endif %}
+                    href="{{ url_for('page_recognition') }}">Recognition</a>
+            </li>
+        </ul>
+    </nav>
+    <div id="train">
+    </div>
+</div>
 <section class="content">
     <div class="container">
         {% block content %}{% endblock %}
@@ -17,5 +30,6 @@
     <script src="{{ url_for('static', filename='axios.min.js') }}"></script>
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="{{ url_for('static', filename='train.js') }}" crossorigin></script>
     {% block js %}{% endblock %}
 </section>
